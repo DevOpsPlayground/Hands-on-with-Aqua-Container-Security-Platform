@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+environment {
+        DOCKER_IMAGE = 'alpine:3.3'
+        // DOCKER_IMAGE = 'alpine:latest'
+    }
+
+    stages {
+        stage('Microscanner'){
+            steps{
+                aquaMicroscanner imageName: "$DOCKER_IMAGE", notCompliesCmd: 'exit 1', onDisallowed: 'fail', outputFormat: 'html'
+            }
+        }
+        stage('checkout'){
+            
+            steps{
+                echo 'Starting Jenkins checkout stage'
+                echo 'Jenkins checkout stage complete'
+            }
+        }
+        stage('build'){
+            agent {
+                docker {image "$DOCKER_IMAGE"}
+            }
+            steps{
+                echo 'Starting Jenkins build stage' 
+                echo 'Jenkins build stage complete'
+            }
+        }
+        stage('test'){
+            steps{
+                echo 'Starting Jenkins test stage'
+                echo 'Jenkins test stage complete'
+            }
+        }
+        stage('deploy'){
+            steps {
+                echo 'Starting Jenkins deploy stage'
+                echo 'Jenkins deploy stage complete'
+            }
+        }
+    }
+
+}
